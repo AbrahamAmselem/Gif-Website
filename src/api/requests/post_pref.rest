@@ -1,0 +1,7 @@
+POST http://localhost:3001/api/favourites 
+Content-Type: application/json
+
+{
+    "username": "Marcos",
+    "preferences": ["Game Of Thrones", "Galaxy", "Netflix"]
+}
