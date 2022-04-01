@@ -1,5 +1,4 @@
 const { model, Schema } = require('mongoose')
-const mongoose = require('mongoose')
 
 const noteSchema = new Schema({
   username: String,
@@ -7,7 +6,7 @@ const noteSchema = new Schema({
 })
 
 const Gif = model('Gif', noteSchema)
-// when json() is called in express toJSON is called underneath so need to
+// when json() is called in express toJSON is called underneath so can change the response schema here
 noteSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id

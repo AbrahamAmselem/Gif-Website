@@ -4,74 +4,72 @@ require('./mongo')
 const Gif = require('./models/Gif')
 const express = require('express')
 const cors = require('cors')
+const notFound = require('./middleware/notFound')
+const handleErrors = require('./middleware/handleErrors')
 const app = express()
 
 app.use(express.json()) // used for POST reading
 app.use(cors()) // Any origin will work on my app needed for frontend
 
-let favourites = [{
-  username: 'Aby',
-  preferences: ['Disney', 'Pixar', 'Warner Bros']
-},
-{
-  username: 'Jose',
-  preferences: ['Cinema', 'Food', 'Burgers']
-},
-{
-  username: 'Isaias',
-  preferences: ['cities', 'architecture', 'coding']
-}]
-
-app.get('/', (req, res) => {
-  res.send('<h1>Hello World</h1>')
-})
-
-app.get('/api/favourites', (req, res) => {
-  Gif.find({}).then(gifs => {
-    res.json(gifs)
-  })
-})
-
-app.get('/api/favourites/:id', (req, res) => {
-  const id = req.params.id
-  const personalPref = favourites.find(fav => fav.username === id)
-  if (personalPref) {
-    res.json(personalPref)
-  } else {
-    res.status(404).end()
-  }
-})
-
-app.delete('/api/favourites/:id', (req, res) => {
-  const id = req.params.id
-  favourites = favourites.filter(fav => fav.username !== id)
-  res.status(204).end()
-})
-
-app.post('/api/favourites', (req, res) => {
-  const pref = req.body
-  const usernameExist = favourites.find(fav => fav.username === pref.username)
-  console.log(usernameExist)
-  if (usernameExist) {
-    return res.status(404).json({
-      error: 'Usernames need to be unique'
-    })
-  } else {
-    const newEntry = {
-      username: pref.username,
-      preferences: pref.preferences
+app.get('/api/userdata', (req, res) => {
+  Gif.find({}).then(userpref => {
+    if (userpref) {
+      return res.json(userpref)
+    } else {
+      res.status(404).end()
     }
-    favourites = [...favourites, newEntry]
-    res.json(newEntry)
-  }
-})
-
-// If we reach this point without a path match output a 404
-app.use((req, res) => {
-  res.status(404).json({
-    error: 'Invalid request check input parameters'
+  }).catch(err => {
+    console.log(err)
+    res.status(400).end()
   })
 })
+
+app.get('/api/userdata/:id', (req, res, next) => {
+  const user = req.params.id
+  Gif.find({ username: user }).then(userpref => {
+    if (userpref.length >= 1) {
+      return res.json(userpref)
+    } else {
+      res.status(404).end()
+    }
+  }).catch(err => {
+    next(err)
+  })
+})
+
+app.delete('/api/userdata/:id', (req, res, next) => {
+  const user = req.params.id
+  Gif.findOneAndRemove({ username: user }).then(result => {
+    res.status(204).end()
+  }).catch(error => next(error))
+})
+
+app.post('/api/userdata', (req, res, next) => {
+  const gifdata = req.body
+  const newEntry = new Gif({
+    username: gifdata.username,
+    preferences: gifdata.preferences
+  })
+  newEntry.save().then(savedEntry => {
+    res.json(savedEntry)
+  }).catch(err => next(err))
+})
+
+app.put('/api/userdata/:id', (req, res, next) => {
+  const user = req.params.id
+  const gifdata = req.body
+  const newGifInfo = {
+    username: gifdata.username,
+    preferences: gifdata.preferences
+  }
+  Gif.findOneAndUpdate({ username: user }, newGifInfo, { new: true })
+    .then(result => {
+      res.json(result)
+    }).catch(err => next(err))
+})
+
+app.use(handleErrors)
+app.use(notFound)
 
 const PORT = process.env.PORT || 3001
 

@@ -1,6 +1,6 @@
+require('dotenv').config()
 const mongoose = require('mongoose')
-
-const connectionString = process.env.MONDO_DB_URI
+const connectionString = process.env.MONGO_DB_URI
 
 // connect to mongo db
 mongoose.connect(connectionString, {
@@ -13,24 +13,6 @@ mongoose.connect(connectionString, {
     console.error(err)
   })
 
-/*
-const gif = new Gif({
-  username: 'Maluma',
-  preferences: ['Wow', 'Lol', 'Warfare']
-
+process.on('uncaughtException', () => {
+  mongoose.connection.disconnect()
 })
-
-gif.save()
-  .then(result => {
-    console.log(result)
-    mongoose.connection.close()
-  })
-  .catch(err => {
-    console.error(err)
-  })
-
-Gif.find({}).then(result => {
-  console.log(result)
-  mongoose.connection.close()
-})
-*/

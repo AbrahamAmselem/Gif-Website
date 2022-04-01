@@ -1,0 +1,7 @@
+POST http://localhost:3001/api/favourites 
+Content-Type: application/json
+
+{
+    "username": "Rebeca",
+    "preferences": ["Fashion", "Influencers"]
+}
