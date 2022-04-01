@@ -1,6 +1,9 @@
+require('dotenv').config()
+require('./mongo')
+
+const Gif = require('./models/Gif')
 const express = require('express')
 const cors = require('cors')
-
 const app = express()
 
 app.use(express.json()) // used for POST reading
@@ -17,14 +20,17 @@ let favourites = [{
 {
   username: 'Isaias',
   preferences: ['cities', 'architecture', 'coding']
-}
-]
+}]
 
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World</h1>')
+app.get('/', (req, res) => {
+  res.send('<h1>Hello World</h1>')
 })
 
-app.get('/api/favourites', (req, res) => res.json(favourites))
+app.get('/api/favourites', (req, res) => {
+  Gif.find({}).then(gifs => {
+    res.json(gifs)
+  })
+})
 
 app.get('/api/favourites/:id', (req, res) => {
   const id = req.params.id
@@ -67,6 +73,6 @@ app.use((req, res) => {
   })
 })
 
-const PORT =  process.env.PORT || 3001
+const PORT = process.env.PORT || 3001
 
 app.listen(PORT, () => console.log(`server running on port ${PORT}`))
