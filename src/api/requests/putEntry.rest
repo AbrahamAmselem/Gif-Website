@@ -1,7 +1,7 @@
-PUT http://localhost:3001/api/userdata/Rebeca
+PUT http://localhost:3001/api/userdata/Aby
 Content-Type: application/json
 
 {
-    "username": "Rebeca",
-    "preferences": ["Fashion", "Influencers", "Kiara"]
+    "username": "Aby",
+    "preferences": ["Kiara", "Mj", "MarketPlace"]
 }
