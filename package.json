@@ -12,6 +12,7 @@
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "mongoose": "^6.2.9",
+    "mongoose-unique-validator": "^3.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.2.2",
@@ -20,7 +21,8 @@
   },
   "scripts": {
     "start-backend": "NODE_ENV=development nodemon src/api/index.js",
-    "test-jest": "NODE_ENV=test jest --verbose --silent",
+    "test-gifs": "NODE_ENV=test PORT=1234 jest --verbose src/api/tests/gifapi.test.js",
+    "test-users": "NODE_ENV=test PORT=1234 jest --verbose src/api/tests/user.test.js --testTimeout=10000",
     "test-jest:watch": "npm run test -- --watch",
     "lint": "eslint . --fix",
     "start": "NODE_ENV=production react-scripts start",

@@ -1,18 +1,31 @@
 const postSpecificRouter = require('express').Router()
 const Gif = require('../models/Gif')
+const User = require('../models/User')
 const express = require('express')
 postSpecificRouter.use(express.json()) // used for POST reading
 
-postSpecificRouter.post('/', (req, res, next) => {
-  const gifdata = req.body
+postSpecificRouter.post('/', async (req, res, next) => {
+  const {
+    username,
+    preferences,
+    userId
+  } = req.body
+
+  const userEntry = await User.findById(userId)
+
   const newEntry = new Gif({
-    username: gifdata.username,
-    preferences: gifdata.preferences
+    username: username,
+    preferences: preferences,
+    user: userEntry._id
   })
-  if (!newEntry.username) next()
-  newEntry.save().then(savedEntry => {
+  try {
+    const savedEntry = await newEntry.save()
+    userEntry.gifs = userEntry.gifs.concat(savedEntry._id)
+    await userEntry.save()
     res.json(savedEntry)
-  }).catch(err => next(err))
+  } catch (err) {
+    next(err)
+  }
 })
 
 module.exports = postSpecificRouter

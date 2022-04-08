@@ -4,6 +4,7 @@ const { server } = require('../index')
 const { api, initialState, retrieveAllData } = require('./helpers')
 
 beforeEach(async () => {
+  // Before every test delete my db contents
   await Gif.deleteMany({})
   const userdata1 = new Gif(initialState[0])
   await userdata1.save()
@@ -46,7 +47,7 @@ test('testing invaling post 400 error on input data', async () => {
   await api
     .post('/api/userdata')
     .send(newData)
-    .expect(404)
+    .expect(400)
   const { response } = await retrieveAllData()
   expect(response.body).toHaveLength(initialState.length + 1)
 })

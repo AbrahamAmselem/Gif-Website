@@ -2,7 +2,11 @@ const getAllRouter = require('express').Router()
 const Gif = require('../models/Gif')
 
 getAllRouter.get('/', (req, res) => {
-  Gif.find({}).then(userpref => {
+  Gif.find({}).populate('user', {
+    username: 1,
+    name: 1,
+    _id: 0
+  }).then(userpref => {
     if (userpref) {
       return res.json(userpref)
     } else {
