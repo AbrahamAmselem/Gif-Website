@@ -1,8 +1,8 @@
 POST http://localhost:3001/api/userdata
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNTA2YjQyM2M4Y2E0ZTkwNDAyZjdlNiIsInVzZXJuYW1lIjoicmViZWFtc2UiLCJpYXQiOjE2NDk2MzEyNzV9.0enYZez2OGXTP4CmlKB1m_48lE3hKkv_CRNHg1TJbcg
 
 {
     "username": "Rebeca",
-    "preferences": ["Fashion", "Influencers"],
-    "userId": "62506b423c8ca4e90402f7e6"
+    "preferences": ["Fashion", "Influencers"]
 }

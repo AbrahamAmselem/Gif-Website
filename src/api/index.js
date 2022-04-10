@@ -12,9 +12,12 @@ const getSpecificRouter = require('./controllers/getSpecific')
 const deleteSpecificRouter = require('./controllers/deleteSpecific')
 const postSpecificRouter = require('./controllers/postSpecific')
 const putSpecificRouter = require('./controllers/putSpecific')
+const loginRouter = require('./controllers/login')
 
 app.use(express.json()) // used for POST reading
 app.use(cors()) // Any origin will work on my app needed for frontend
+
+app.use('/api/login', loginRouter)
 
 app.use('/api/userdata', putSpecificRouter)
 
